@@ -56,11 +56,61 @@ data_amp_raw <- read_csv("../data/raw/data_amp_raw.csv") |>
 
 Clean the demographics data so that summaries of age and gender can be made in the analysis.
 
+# der Befehl RENAME ändert Spaltennamen
+
 ```{r}
 
-#dat_age_gender <- data_demographics_raw 
+dat_age_gender <- data_demographics_raw %>% 
+  rename(unique_id = subject, item = trialcode, response = response) %>% 
+  select(unique_id, item, response)
+```
+
+#jetzt wollen wir age und gender zu zwei spalten machen (sind in #originaldaten in der gleichen Spalte)
+# dazu verwenden wir FILTER:
+
+```{r}
+temp <- dat_age_gender %>% 
+  filter(item == "age")
+  
+```
+##EXKURS##
+# PIPE explanation: %<% der output der vorherigen Zeile wird als Input (also als Daten) im nächsten Befehlverwendet. shortcut: ctrl + shift + m 
+
+#Jetzt alles zusammenführen (auf dat_age_gender anwenden):
+
+```{r}
+dat_age_gender <- data_demographics_raw %>% 
+  rename(unique_id = subject, item = trialcode, response = response) %>% 
+  select(unique_id, item, response) %>% 
+  filter(item == "age")
+
 
 ```
+# Jetzt ist das Problem, dass wir bei der Spalte Response eine PErson haben, die "old" angegeben haben
+
+#Der folgende befehl DISTINCT ist nur zum ausprobieren, zeigt dann nur noch diese Spalte an
+```{r}
+temp <- dat_age_gender %>% 
+  distinct(response)
+  
+```
+#MUTATE kann man die Variablen einer Spalte bearbeiten, aber macht eine Kopie davon also wird ursprüngliche Spalte nicht verändert
+```{r}
+temp2 <- dat_age_gender %>% 
+  mutate(uniqu_id_2 = unique_id*2)
+```
+# wir wollen aber, dass die response Spalte NUR aus Zahlen besteht.
+#Dafür verwenden wir auch MUTATE. Den Folgenden Code haben wir von CHATGPT erfragt
+```{r}
+temp2 <- dat_age_gender %>% 
+  mutate(response = str_remove_all(response, "\\D"), response = na_if(response, ""))
+
+
+```
+
+#Der Befehl oben könnte ein Problem werden, wenn jemand "twenty" in Buchstaben als Antwort gibt, dann würde eine eig korrekte Antwort auch NA werden. (Deswegen nach möglichkeit schnell durchschauen) 
+
+
 
 # Exclusions / data quality
 
