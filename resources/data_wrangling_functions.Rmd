@@ -135,10 +135,11 @@ Useful arguments:
 ```
 
 ## filter
+Kann, wenn 2 verschiedene Elemente in einer Spalte sind, nur eines der Elemente in der Spalte aufnehmen. Nacher ist nur noch Element1 in der Spalte
 
 ```{r}
 
-# dplyr::filter()
+# dplyr::filter(data, Spaltenname == Element1)
 
 ```
 
@@ -158,10 +159,11 @@ slice(mtcars, 2:n()) # this should have 31 rows
 ```
 
 ## select
+## wählt Spalten aus, der Datensatz besteht nacher nur noch aus diesen Spalten
 
 ```{r}
 
-# dplyr::select()
+# dplyr::select(data, column1, column2, ...)
 
 ```
 
