@@ -110,6 +110,38 @@ temp2 <- dat_age_gender %>%
 
 #Der Befehl oben könnte ein Problem werden, wenn jemand "twenty" in Buchstaben als Antwort gibt, dann würde eine eig korrekte Antwort auch NA werden. (Deswegen nach möglichkeit schnell durchschauen) 
 
+#Jetzt wieder alles zusammenfügen:
+```{r}
+dat_age_gender <- data_demographics_raw %>% 
+  rename(unique_id = subject, item = trialcode, response = response) %>% 
+  select(unique_id, item, response) %>% 
+  filter(item == "age") %>% 
+  mutate(response = str_remove_all(response, "\\D"), response = na_if(response, ""))
+```
+#Jetzt extrahieren wir "gender" anstatt "age"
+```{r}
+dat_age_gender <- data_demographics_raw %>% 
+  rename(unique_id = subject, item = trialcode, response = response) %>% 
+  select(unique_id, item, response) %>% 
+  filter(item == "gender") 
+
+  
+```
+#Jetzt numerische Werte und "yes" aus Spalte "response" entfernen
+#Code from ChatGPT
+```{r}
+dat_age_gender <- data_demographics_raw %>% 
+  rename(unique_id = subject, item = trialcode, response = response) %>% 
+  select(unique_id, item, response) %>% 
+  filter(item == "gender") %>% 
+  mutate(response = case_when(
+    grepl("^[0-9]+$", response) ~ NA,  
+    response == "yes" ~ NA,            
+    TRUE ~ response ))       
+
+```
+
+
 
 
 # Exclusions / data quality
